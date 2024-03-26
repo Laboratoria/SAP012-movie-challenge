@@ -1,30 +1,33 @@
+const options = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: 'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiI4YWFkOWM0YTFiNjIyNmVjOWM0ZjY4ODkxMzQ3ODI5MyIsInN1YiI6IjY1ZjQ2N2VhMjRmMmNlMDE4NTE3ZTM5MSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.2xJ7C9y2opxIFXqaqf3sFoN8zSXUvOSt49Esa7rZNeE'
+  }
+};
 const App = () => {
-  const cartões = document.createElement('ul');
-  cartões.className = 'container_cartoes';
-
   // Realiza a requisição à API
-  fetch('https://api.themoviedb.org/3/list/{list_id}', {method: 'GET'})
-  .then(response => response.json()) 
-  .then(data => {
-      // Utiliza o método map() para criar um array de strings contendo o HTML de cada item
-      const itensHTML = data.map(item => `
-          <li itemscope itemtype="https://www.imdb.com/list/ls086959587/" class="container_li">
-              <dl itemscope itemtype="https://www.imdb.com/list/ls086959587/">
-                  <dt><img src="${item.imageUrl}" alt="Imagem do card" itemprop="imageUrl" class="img_card" /></dt>
-                  <dt>Avaliação:</dt>
-                  <dd itemprop="facts">${item.facts.doramaRating}</dd>
-              </dl>
-          </li>
-      `);
-      
-      // Atualiza o conteúdo da lista <ul> com o HTML gerado pelos itens da API
-      cartões.innerHTML = itensHTML.join('');
-  })
-  .catch(error => {
-      console.error('Erro ao obter os dados da API:', error);
-  });
+  fetch('https://api.themoviedb.org/3/list/8294392?language=en-US&page=1', options)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      const cartoes = document.createElement('ul');
+      cartoes.classList.add('container_cartoes');
 
-  return cartões;
+      data.items.forEach(item => {
+        cartoes.innerHTML += `
+        <li class="container_li">
+          <dl>
+            <dt><img src="${item.poster_path}" alt="${item.title}" itemprop="imageUrl" class="img_card" /></dt>
+            <dt>${item.release_date}</dt>
+            <dt>${item.title}</dt>
+          </dl>
+        </li>
+        `;
+        console.log(cartoes);
+      })
+      return cartoes;
+    });
 };
 
 export default App;
@@ -37,6 +40,12 @@ export default App;
 //     cartões.className = 'container_cartoes';
 //     cartões.textContent = 'vai printar';
   
+  
+//     return cartões;
+//   };
+//   // Exporta a função App como padrão
+//   export default App;
+
 //     return cartões;
 //   };
 //   // Exporta a função App como padrão
